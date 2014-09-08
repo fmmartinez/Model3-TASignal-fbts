@@ -1,6 +1,6 @@
 program modeliiimain
 use m_map, only: iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff,  &
-                  get_fact,get_a,get_force_traceless,get_pulsefield,get_hm2,  &
+                  get_fact,get_a,get_force_fb,get_pulsefield,get_hm2,  &
                   make_hm_traceless,update_p,update_x,update_pm,update_rm,    &
                   update_a2
 implicit none
@@ -128,8 +128,8 @@ MonteCarlo: do mcs = 1, nmcs
    pol(ib,cnt) = pol(ib,cnt) + fact
 
    call get_a(c2,ome,x,a1,a2)
-   call get_force_traceless(nmap,ng,nb,lld,kosc,x,c2,rm,pm,f)
-
+   call get_force_fb(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
+   
    MolecularDynamics: do it = 1, nmds
       call get_pulsefield(np,tau,it,dt,time,g,E0,E1,omega,et)
       
@@ -156,7 +156,7 @@ MonteCarlo: do mcs = 1, nmcs
       call update_pm(dt2,hm,rm,pm)
       call update_pm(dt2,hm,rn,pn)
 
-      call get_force_traceless(nmap,ng,nb,lld,kosc,x,c2,rm,pm,f)
+      call get_force_fb(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
 
       call update_p(dt2,f,p)
 

@@ -5,7 +5,7 @@ implicit none
 private
 
 public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff,get_fact,get_a
-public get_force_traceless
+public get_force_fb
 public get_pulsefield
 public get_hm2,make_hm_traceless
 public update_p,update_x,update_pm,update_rm,update_a2
@@ -13,6 +13,46 @@ public update_p,update_x,update_pm,update_rm,update_a2
 real(8),parameter :: pi=3.1415926535d0
 
 contains
+
+subroutine get_force_fb(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
+implicit none
+
+real(8),dimension(:),intent(in) :: rm,pm,rn,pn,x
+real(8),dimension(:),intent(out) :: f
+
+integer :: a,b,i,j,n
+integer,intent(in) :: nmap,ng,nb
+
+real(8) :: trace,tn
+real(8),dimension(:),intent(in) :: kosc,c2
+real(8),dimension(:,:),intent(in) :: lld
+real(8),dimension(:,:),allocatable :: dh
+
+allocate(dh(1:nmap,1:nmap))
+
+n = size(x)
+
+f = 0d0
+do j = 1, n
+   f(j) = -kosc(j)*x(j)
+   
+   dh = (lld)*c2(j)
+   
+   trace = 0d0
+   do a = 1, nmap
+      trace = trace + dh(a,a)
+   end do
+
+   tn = trace/nmap
+   
+   f(j) = f(j) + tn
+
+   do a = 1, nmap
+      f(j) = f(j) - 0.5d0*dh(a,a)*(rm(a)*rm(a) + pm(a)*pm(a) + rn(a)*rn(a) + pn(a)*pn(a))
+   end do
+end do
+
+end subroutine get_force_fb
 
 subroutine get_coeff(ng,beta,omega,rm,pm,rn,pn,coeff)
 implicit none
