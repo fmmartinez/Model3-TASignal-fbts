@@ -11,7 +11,7 @@ character(len=2) :: c_ng,c_nt
 character(len=9) :: fmt1,fmt2
 
 complex(8) :: coeff,fact,a1,a2,et
-complex(8),dimension(:),allocatable :: pol_tot,x,p,rm,pm,f
+complex(8),dimension(:),allocatable :: pol_tot,x,p,rm,pm,rn,pn,f
 complex(8),dimension(:,:),allocatable :: pol,hm
 
 integer :: a,b,i,j,is,it,cnt,p_i,p_j,p_k,ib,nmap,ng,nb,nd,basispc
@@ -32,6 +32,7 @@ nmap = ng + nb + nd
 allocate(c2(1:nosc),kosc(1:nosc),ome(1:nosc),x(1:nosc),p(1:nosc),f(1:nosc))
 allocate(tau(1:np),omega(1:np),time(1:np),g(1:np))
 allocate(rm(1:nmap),pm(1:nmap))
+allocate(rn(1:nmap),pn(1:nmap))
 
 allocate(sgg(1:ng,1:ng),sgb(1:ng,1:nb),sgd(1:ng,1:nd))
 allocate(sbg(1:nb,1:ng),sbb(1:nb,1:nb),sbd(1:nb,1:nd))
