@@ -51,11 +51,11 @@ deallocate(exp_be)
 deallocate(prob)
 end subroutine get_coeff
 
-subroutine get_fact(nmap,llgb,llbg,rm,pm,fact)
+subroutine get_fact(nmap,llgb,llbg,rm,pm,rn,pn,fact)
 implicit none
 
 complex(8),intent(out) :: fact
-complex(8),dimension(:),intent(in) :: rm,pm
+complex(8),dimension(:),intent(in) :: rm,pm,rn,pn
 
 integer :: a,b
 integer,intent(in) :: nmap
@@ -66,9 +66,7 @@ fact = cmplx(0d0,0d0)
 do a = 1, nmap
    do b = 1, nmap
       if (a == b) then
-         fact = fact + (llgb(a,b) + llbg(a,b))*(rm(a)*rm(b) + pm(a)*pm(b) - 1d0)
-      else
-         fact = fact + (llgb(a,b) + llbg(a,b))*(rm(a)*rm(b) + pm(a)*pm(b))
+         fact = fact + (llgb(a,b) + llbg(a,b))*(cmplx(rm(a),-pm(a))*cmplx(rn(b),pn(b)))
       end if
    end do
 end do

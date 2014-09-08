@@ -119,9 +119,9 @@ MonteCarlo: do mcs = 1, nmcs
    call sampling_mapng(init,rm,pm)
    call sampling_mapng(init,rn,pn)
    
-   call get_coeff(ng,beta,vomega,rm,pm,coeff)
+   call get_coeff(ng,beta,vomega,rm,pm,rn,pn,coeff)
 !   coeff = (rm(1)**2 + pm(1)**2 - 0.5d0)
-   call get_fact(nmap,llgb,llbg,rm,pm,fact)
+   call get_fact(nmap,llgb,llbg,rm,pm,rn,pn,fact)
    fact = fact*coeff*mu
    
    ib = 1
@@ -158,7 +158,7 @@ MonteCarlo: do mcs = 1, nmcs
       call update_p(dt2,f,p)
 
       ib = it + 1
-      call get_fact(nmap,llgb,llbg,rm,pm,fact)
+      call get_fact(nmap,llgb,llbg,rm,pm,rn,pn,fact)
       fact = fact*coeff*mu
       pol(ib,cnt) = pol(ib,cnt) + fact
    end do MolecularDynamics

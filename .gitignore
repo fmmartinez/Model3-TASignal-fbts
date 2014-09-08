@@ -9,3 +9,6 @@ TA*/
 #logs
 fort.*
 *.log
+
+#temps
+*.swp
