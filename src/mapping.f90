@@ -17,8 +17,8 @@ contains
 subroutine get_force_fb(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
 implicit none
 
-real(8),dimension(:),intent(in) :: rm,pm,rn,pn,x
-real(8),dimension(:),intent(out) :: f
+complex(8),dimension(:),intent(in) :: rm,pm,rn,pn,x
+complex(8),dimension(:),intent(out) :: f
 
 integer :: a,b,i,j,n
 integer,intent(in) :: nmap,ng,nb
@@ -58,13 +58,13 @@ subroutine get_coeff(ng,beta,omega,rm,pm,rn,pn,coeff)
 implicit none
 
 complex(8),intent(out) :: coeff
+complex(8),dimension(:),intent(in) :: rm,pm,rn,pn
 
 integer :: i
 integer,intent(in) :: ng
 
-real(8) :: z
+real(8) :: z,a1,b1,c1,d1,a2,b2,c2,d2
 real(8),intent(in) :: beta,omega
-real(8),dimension(:),intent(in) :: rm,pm,rn,pn
 real(8),dimension(:),allocatable :: exp_be,prob
 
 allocate(exp_be(1:ng),prob(1:ng))
@@ -84,7 +84,16 @@ coeff = 0d0
 !only diagonal because in the ngxng matrix by construction their lambdas are
 ! (1,0,0...), (0,1,0...), (0,0,1...), etc
 do i = 1, ng
-   coeff = coeff + cmplx(rm(i),pm(i))*cmplx(rn(i),-pn(i))*prob(i)
+   a1 = dble(rm(i))
+   b1 = aimag(rm(i))
+   c1 = dble(pm(i))
+   d1 = aimag(pm(i))
+   a2 = dble(rn(i))
+   b2 = aimag(rn(i))
+   c2 = dble(pn(i))
+   d2 = aimag(pn(i))
+   
+   coeff = coeff + cmplx((a1-d1),(b1+c1))*cmplx((a2+d2),-(b2+c2))*prob(i)
 end do
 
 deallocate(exp_be)
@@ -100,14 +109,22 @@ complex(8),dimension(:),intent(in) :: rm,pm,rn,pn
 integer :: a,b
 integer,intent(in) :: nmap
 
+real(8) :: a1,b1,c1,d1,a2,b2,c2,d2
 real(8),dimension(:,:),intent(in) :: llgb,llbg
 
 fact = cmplx(0d0,0d0)
 do a = 1, nmap
    do b = 1, nmap
-      if (a == b) then
-         fact = fact + (llgb(a,b) + llbg(a,b))*(cmplx(rm(a),-pm(a))*cmplx(rn(b),pn(b)))
-      end if
+      a1 = dble(rm(a))
+      b1 = aimag(rm(a))
+      c1 = dble(pm(a))
+      d1 = aimag(pm(a))
+      a2 = dble(rn(b))
+      b2 = aimag(rn(b))
+      c2 = dble(pn(b))
+      d2 = aimag(pn(b))
+      
+      fact = fact + (llgb(a,b) + llbg(a,b))*(cmplx((a1+d1),-(b1+c1))*cmplx((a2-d2),(b2+c2)))
    end do
 end do
 
