@@ -117,6 +117,7 @@ MonteCarlo: do mcs = 1, nmcs
    call sampling_class(bath,beta,kosc,c2,x,p)
 
    call sampling_mapng(init,rm,pm)
+   call sampling_mapng(init,rn,pn)
    
    call get_coeff(ng,beta,vomega,rm,pm,coeff)
 !   coeff = (rm(1)**2 + pm(1)**2 - 0.5d0)
