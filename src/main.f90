@@ -141,6 +141,7 @@ MonteCarlo: do mcs = 1, nmcs
       call update_p(dt2,f,p)
 
       call update_pm(dt2,hm,rm,pm)
+      call update_pm(dt2,hm,rn,pn)
       
       call update_x(dt,p,x)
       
@@ -150,8 +151,10 @@ MonteCarlo: do mcs = 1, nmcs
       call make_hm_traceless(nmap,hm)
 
       call update_rm(dt,hm,pm,rm)
+      call update_rm(dt,hm,pn,rn)
 
       call update_pm(dt2,hm,rm,pm)
+      call update_pm(dt2,hm,rn,pn)
 
       call get_force_traceless(nmap,ng,nb,lld,kosc,x,c2,rm,pm,f)
 
