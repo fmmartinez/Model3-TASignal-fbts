@@ -54,6 +54,44 @@ end do
 
 end subroutine get_force_fb
 
+subroutine get_force_fb_traceless(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
+implicit none
+
+complex(8),dimension(:),intent(in) :: rm,pm,rn,pn,x
+complex(8),dimension(:),intent(out) :: f
+
+integer :: a,b,i,j,n
+integer,intent(in) :: nmap,ng,nb
+
+real(8) :: trace,tn
+real(8),dimension(:),intent(in) :: kosc,c2
+real(8),dimension(:,:),intent(in) :: lld
+real(8),dimension(:,:),allocatable :: dh
+
+allocate(dh(1:nmap,1:nmap))
+
+n = size(x)
+
+f = 0d0
+do j = 1, n
+   f(j) = -kosc(j)*x(j)
+   
+   dh = (lld)*c2(j)
+   
+   trace = 0d0
+   do a = 1, nmap
+      trace = trace + dh(a,a)
+   end do
+
+   tn = trace/nmap
+   
+   do a = 1, nmap
+      f(j) = f(j) - 0.5d0*(dh(a,a)-tn)*(rm(a)*rm(a) + pm(a)*pm(a) + rn(a)*rn(a) + pn(a)*pn(a))
+   end do
+end do
+
+end subroutine get_force_fb_traceless
+
 subroutine get_coeff(ng,beta,omega,rm,pm,rn,pn,coeff)
 implicit none
 
