@@ -5,7 +5,7 @@ implicit none
 private
 
 public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff,get_fact,get_a
-public get_force_fb
+public get_force_fb_traceless
 public get_pulsefield
 public get_hm2,make_hm_traceless
 public update_p,update_x,update_pm,update_rm,update_a2
