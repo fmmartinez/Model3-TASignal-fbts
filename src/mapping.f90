@@ -4,7 +4,7 @@ implicit none
 
 private
 
-public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff,get_fact,get_a
+public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff_fb,get_fact,get_a
 public get_force_fb_traceless
 public get_pulsefield
 public get_hm2,make_hm_traceless
@@ -92,7 +92,7 @@ end do
 
 end subroutine get_force_fb_traceless
 
-subroutine get_coeff(ng,beta,omega,rm,pm,rn,pn,coeff)
+subroutine get_coeff_fb(ng,beta,omega,rm,pm,rn,pn,coeff)
 implicit none
 
 complex(8),intent(out) :: coeff
@@ -113,10 +113,10 @@ do i = 1, ng
    !exp_be(i) = exp(-beta*omega*(i - 0.5d0))
    !exp_be(i) = exp(-1.44d0*(i - 0.5d0))
    exp_be(i) = exp(-2.29d-1*(i - 0.5d0))
-   !z = z + exp_be(i)
+   z = z + exp_be(i)
 end do
 
-prob = exp_be!/z
+prob = exp_be/z
 
 coeff = 0d0
 !only diagonal because in the ngxng matrix by construction their lambdas are
@@ -136,7 +136,7 @@ end do
 
 deallocate(exp_be)
 deallocate(prob)
-end subroutine get_coeff
+end subroutine get_coeff_fb
 
 subroutine get_fact(nmap,llgb,llbg,rm,pm,rn,pn,fact)
 implicit none

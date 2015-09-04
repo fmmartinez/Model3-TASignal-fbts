@@ -1,5 +1,5 @@
 program modeliiimain
-use m_map, only: iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff,  &
+use m_map, only: iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff_fb,  &
                   get_fact,get_a,get_force_fb_traceless,get_pulsefield,get_hm2,  &
                   make_hm_traceless,update_p,update_x,update_pm,update_rm,    &
                   update_a2
@@ -119,7 +119,7 @@ MonteCarlo: do mcs = 1, nmcs
    call sampling_mapng(init,rm,pm)
    call sampling_mapng(init,rn,pn)
    
-   call get_coeff(ng,beta,vomega,rm,pm,rn,pn,coeff)
+   call get_coeff_fb(ng,beta,vomega,rm,pm,rn,pn,coeff)
 !   coeff = (rm(1)**2 + pm(1)**2 - 0.5d0)
    call get_fact(nmap,llgb,llbg,rm,pm,rn,pn,fact)
    fact = fact*coeff*mu
