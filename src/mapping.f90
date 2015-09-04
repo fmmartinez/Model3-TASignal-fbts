@@ -150,12 +150,12 @@ real(8),dimension(:,:),intent(in) :: llgb,llbg
 fact = cmplx(0d0,0d0)
 do a = 1, ng
    do b = ng+1, ng+nb
-      fact = fact + llgb(a,b)*(rm(a)+img*pm(a))*(rn(b)-img*pn(b))
+      fact = fact + llgb(a,b)*(rm(a)-img*pm(a))*(rn(b)+img*pn(b))
    end do
 end do
 do a = ng+1, ng+nb
    do b = 1, ng
-      fact = fact + llbg(a,b)*(rm(a)+img*pm(a))*(rn(b)-img*pn(b))
+      fact = fact + llbg(a,b)*(rm(a)-img*pm(a))*(rn(b)+img*pn(b))
    end do
 end do
 fact = fact*coeff*mu
