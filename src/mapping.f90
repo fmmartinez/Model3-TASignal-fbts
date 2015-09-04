@@ -124,17 +124,10 @@ coeff = 0d0
 !only diagonal because in the ngxng matrix by construction their lambdas are
 ! (1,0,0...), (0,1,0...), (0,0,1...), etc
 do i = 1, ng
-   a1 = dble(rm(i))
-   b1 = aimag(rm(i))
-   c1 = dble(pm(i))
-   d1 = aimag(pm(i))
-   a2 = dble(rn(i))
-   b2 = aimag(rn(i))
-   c2 = dble(pn(i))
-   d2 = aimag(pn(i))
-   
-   coeff = coeff + cmplx((a1-d1),(b1+c1))*cmplx((a2+d2),-(b2+c2))*prob(i)
+   coeff = coeff + prob(i)*(rm(i)+img*pm(i))*(rn(i)-img*pn(i))
 end do
+
+coeff = 0.25d0*coeff
 
 deallocate(exp_be)
 deallocate(prob)
