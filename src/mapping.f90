@@ -5,7 +5,7 @@ implicit none
 private
 
 public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff_fb,get_fact_fb,get_a
-public get_force_fb_traceless
+public get_traceless_force_fb
 public get_pulsefield
 public get_hm2,make_hm_traceless
 public update_p,update_x,update_pm,update_rm,update_a2
@@ -56,9 +56,11 @@ end do
 
 end subroutine get_force_fb
 
-subroutine get_force_fb_traceless(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
+subroutine get_traceless_force_fb(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
 implicit none
 
+complex(8) :: fcla,ftra,fqua
+complex(8),dimension(:),allocatable :: c
 complex(8),dimension(:),intent(in) :: rm,pm,rn,pn,x
 complex(8),dimension(:),intent(out) :: f
 
@@ -68,31 +70,36 @@ integer,intent(in) :: nmap,ng,nb
 real(8) :: trace,tn
 real(8),dimension(:),intent(in) :: kosc,c2
 real(8),dimension(:,:),intent(in) :: lld
-real(8),dimension(:,:),allocatable :: dh
+!real(8),dimension(:,:),allocatable :: dh
 
-allocate(dh(1:nmap,1:nmap))
+!allocate(dh(1:nmap,1:nmap))
+allocate(c(1:nmap))
 
 n = size(x)
 
 f = 0d0
-do j = 1, n
-   f(j) = -kosc(j)*x(j)
-   
-   dh = (lld)*c2(j)
-   
-   trace = 0d0
-   do a = 1, nmap
-      trace = trace + dh(a,a)
-   end do
-
-   tn = trace/nmap
-   
-   do a = 1, nmap
-      f(j) = f(j) - 0.5d0*(dh(a,a)-tn)*(rm(a)*rm(a) + pm(a)*pm(a) + rn(a)*rn(a) + pn(a)*pn(a))
-   end do
+!getting product for faster calculation
+do a = 1, nmap
+   c(a) = 0.25d0*(rm(a)*rm(a) + pm(a)*pm(a) + rn(a)*rn(a) + pn(a)*pn(a))
 end do
 
-end subroutine get_force_fb_traceless
+do j = 1, n
+   fcla = -kosc(j)*x(j)
+   
+   ftra = (nmap-ng-nb)*(-2d0*c2(j))/nmap
+   
+   fqua = cmplx(0d0,0d0)
+   do a = 1, ng+nb
+      fqua = fqua + (-ftra)*c(a)
+   end do
+   do a = ng+nb+1, nmap
+      fqua = fqua + (-2d0*c2(j)-ftra)*c(a)
+   end do
+
+   f(j) = fcla + ftra + fqua
+end do
+
+end subroutine get_traceless_force_fb
 
 subroutine get_coeff_fb(ng,beta,omega,rm,pm,rn,pn,coeff)
 implicit none
