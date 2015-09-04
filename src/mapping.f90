@@ -4,11 +4,13 @@ implicit none
 
 private
 
-public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff_fb,get_fact,get_a
+public iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff_fb,get_fact_fb,get_a
 public get_force_fb_traceless
 public get_pulsefield
 public get_hm2,make_hm_traceless
 public update_p,update_x,update_pm,update_rm,update_a2
+
+complex(8),parameter :: img=cmplx(0d0,1d0)
 
 real(8),parameter :: pi=3.1415926535d0
 
@@ -138,35 +140,33 @@ deallocate(exp_be)
 deallocate(prob)
 end subroutine get_coeff_fb
 
-subroutine get_fact(nmap,llgb,llbg,rm,pm,rn,pn,fact)
+subroutine get_fact_fb(ng,nb,coeff,llgb,llbg,mu,rm,pm,rn,pn,fact)
 implicit none
 
 complex(8),intent(out) :: fact
+complex(8),intent(in) :: coeff
 complex(8),dimension(:),intent(in) :: rm,pm,rn,pn
 
 integer :: a,b
-integer,intent(in) :: nmap
+integer,intent(in) :: ng,nb
 
 real(8) :: a1,b1,c1,d1,a2,b2,c2,d2
+real(8),intent(in) :: mu
 real(8),dimension(:,:),intent(in) :: llgb,llbg
 
 fact = cmplx(0d0,0d0)
-do a = 1, nmap
-   do b = 1, nmap
-      a1 = dble(rm(a))
-      b1 = aimag(rm(a))
-      c1 = dble(pm(a))
-      d1 = aimag(pm(a))
-      a2 = dble(rn(b))
-      b2 = aimag(rn(b))
-      c2 = dble(pn(b))
-      d2 = aimag(pn(b))
-      
-      fact = fact + (llgb(a,b) + llbg(a,b))*(cmplx((a1+d1),-(b1+c1))*cmplx((a2-d2),(b2+c2)))
+do a = 1, ng
+   do b = ng+1, ng+nb
+      fact = fact + llgb(a,b)*(rm(a)+img*pm(a))*(rn(b)-img*pn(b))
    end do
 end do
-
-end subroutine get_fact
+do a = ng+1, ng+nb
+   do b = 1, ng
+      fact = fact + llbg(a,b)*(rm(a)+img*pm(a))*(rn(b)-img*pn(b))
+   end do
+end do
+fact = fact*coeff*mu
+end subroutine get_fact_fb
 
 subroutine get_lambda_eigenvectors(ng,nb,nd,eg,eb,ed,delta,omega,&
                                     sgg,sgb,sgd,sbg,sbb,sbd,sdg,sdb,sdd,lambda,hsf)
