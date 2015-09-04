@@ -519,11 +519,11 @@ end subroutine get_hm2
 subroutine make_hm_traceless(nmap,hm)
 implicit none
 
+complex(8) :: trace
 complex(8),dimension(:,:),intent(inout) :: hm
 
-integer :: nmap,i
-
-real(8) :: trace
+integer :: i
+integer,intent(in) :: nmap
 
 trace = 0d0
 do i = 1, nmap
