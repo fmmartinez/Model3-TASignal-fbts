@@ -16,6 +16,37 @@ real(8),parameter :: pi=3.1415926535d0
 
 contains
 
+subroutine get_totalenergy_fb(nmap,hm,pm,rm,pn,rn,x,p,kosc,etotal)
+implicit none
+
+integer :: i,j,n
+integer,intent(in) :: nmap
+
+complex(8) :: ecla,equa,etra
+complex(8),intent(out) :: etotal
+complex(8),dimension(:),intent(in) :: x,p,rm,pm,rn,pn
+complex(8),dimension(:,:),intent(in) :: hm
+
+real(8),dimension(:),intent(in) :: kosc
+
+n = size(kosc)
+ecla = 0d0
+!classical part
+do i = 1, n
+   ecla = ecla + 0.5d0*(p(i)**2 + kosc(i)*x(i)**2)
+end do
+!trace part
+etra = 0d0
+!quantum part
+equa = 0d0
+do i = 1, nmap
+   do j = 1, nmap
+      equa = equa + 0.25d0*hm(i,j)*(pm(i)*pm(j) + rm(i)*rm(j) + pn(i)*pn(j) + rn(i)*rn(j))
+   end do
+end do
+etotal = ecla - etra + equa
+end subroutine get_totalenergy_fb
+
 subroutine get_force_fb(nmap,ng,nb,lld,kosc,x,c2,rm,pm,rn,pn,f)
 implicit none
 
