@@ -164,6 +164,7 @@ MonteCarlo: do mcs = 1, nmcs
 
       if (mod(mcs,nmcs) == 0) then
          call get_totalenergy_fb(nmap,hm,pm,rm,pn,rn,x,p,kosc,etotal)
+         etotal = etotal + tn
          write(747,'(i5,4f20.8)') it, etotal
       end if
    end do MolecularDynamics
