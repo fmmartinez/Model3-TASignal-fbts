@@ -2,7 +2,7 @@ program modeliiimain
 use m_map, only: iniconq_d,get_preh,sampling_class,sampling_mapng,get_coeff_fb,  &
                   get_fact_fb,get_a,get_traceless_force_fb,get_pulsefield,get_hm2,  &
                   make_hm_traceless,update_p,update_x,update_pm,update_rm,    &
-                  update_a2
+                  update_a2, get_totalenergy_fb
 implicit none
 
 real(8),parameter :: pi=3.1415926535d0, twopi = 2d0*pi
@@ -10,7 +10,7 @@ real(8),parameter :: pi=3.1415926535d0, twopi = 2d0*pi
 character(len=2) :: c_ng,c_nt
 character(len=9) :: fmt1,fmt2
 
-complex(8) :: coeff,fact,a1,a2,et
+complex(8) :: coeff,fact,a1,a2,et,etotal
 complex(8),dimension(:),allocatable :: pol_tot,x,p,rm,pm,rn,pn,f
 complex(8),dimension(:,:),allocatable :: pol,hm
 
@@ -161,6 +161,11 @@ MonteCarlo: do mcs = 1, nmcs
       call get_fact_fb(ng,nb,coeff,llgb,llbg,mu,rm,pm,rn,pn,fact)
       
       pol(ib,cnt) = pol(ib,cnt) + fact
+
+      if (mod(mcs,nmcs) == 0) then
+         call get_totalenergy_fb(nmap,hm,pm,rm,pn,rn,x,p,kosc,etotal)
+         write(747,'(i5,4f20.8)') it, etotal
+      end if
    end do MolecularDynamics
 end do MonteCarlo
 

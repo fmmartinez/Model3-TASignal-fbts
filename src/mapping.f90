@@ -9,6 +9,7 @@ public get_traceless_force_fb
 public get_pulsefield
 public get_hm2,make_hm_traceless
 public update_p,update_x,update_pm,update_rm,update_a2
+public get_totalenergy_fb
 
 complex(8),parameter :: img=cmplx(0d0,1d0)
 
