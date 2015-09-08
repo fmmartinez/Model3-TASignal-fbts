@@ -167,6 +167,10 @@ MonteCarlo: do mcs = 1, nmcs
          etotal = etotal + tn
          write(747,'(i5,4f20.8)') it, etotal
       end if
+
+      if ((pol(ib,cnt) /= pol(ib,cnt)).or.(pol(ib,cnt)-1 == pol(ib,cnt))) then
+         print *, 'there is overflow in', it, mcs
+      end if
    end do MolecularDynamics
 end do MonteCarlo
 
