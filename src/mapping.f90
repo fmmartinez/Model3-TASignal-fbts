@@ -548,10 +548,10 @@ do i = ng+nb+1,nmap
 end do
 end subroutine get_hm2
 
-subroutine make_hm_traceless(nmap,hm)
+subroutine make_hm_traceless(nmap,hm,trace)
 implicit none
 
-complex(8) :: trace
+complex(8),intent(out) :: trace
 complex(8),dimension(:,:),intent(inout) :: hm
 
 integer :: i

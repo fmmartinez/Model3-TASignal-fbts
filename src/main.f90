@@ -10,7 +10,7 @@ real(8),parameter :: pi=3.1415926535d0, twopi = 2d0*pi
 character(len=2) :: c_ng,c_nt
 character(len=9) :: fmt1,fmt2
 
-complex(8) :: coeff,fact,a1,a2,et,etotal
+complex(8) :: coeff,fact,a1,a2,et,etotal,tn
 complex(8),dimension(:),allocatable :: pol_tot,x,p,rm,pm,rn,pn,f
 complex(8),dimension(:,:),allocatable :: pol,hm
 
@@ -132,7 +132,7 @@ MonteCarlo: do mcs = 1, nmcs
       call get_pulsefield(np,tau,it,dt,time,g,E0,E1,omega,et)
       
       call get_hm2(nmap,ng,nb,mu,et,a1,a2,hs,hm)
-      call make_hm_traceless(nmap,hm)
+      call make_hm_traceless(nmap,hm,tn)
 
       call update_p(dt2,f,p)
 
@@ -144,7 +144,7 @@ MonteCarlo: do mcs = 1, nmcs
       call update_a2(c2,x,a2)
 
       call get_hm2(nmap,ng,nb,mu,et,a1,a2,hs,hm)
-      call make_hm_traceless(nmap,hm)
+      call make_hm_traceless(nmap,hm,tn)
 
       call update_rm(dt,hm,pm,rm)
       call update_rm(dt,hm,pn,rn)
