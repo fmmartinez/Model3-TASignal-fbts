@@ -10,9 +10,12 @@ real(8),parameter :: pi=3.1415926535d0, twopi = 2d0*pi
 character(len=2) :: c_ng,c_nt
 character(len=9) :: fmt1,fmt2
 
-complex(8) :: coeff,fact,a1,a2,et,etotal,tn
-complex(8),dimension(:),allocatable :: pol_tot,x,p,rm,pm,rn,pn,f
-complex(8),dimension(:,:),allocatable :: pol,hm
+complex(8) :: coeff,fact,et
+complex(8),dimension(:),allocatable :: pol_tot
+complex(8),dimension(:,:),allocatable :: pol
+real(8) :: a1,a2,etotal,tn
+real(8),dimension(:),allocatable :: x,p,rm,pm,rn,pn,f
+real(8),dimension(:,:),allocatable :: hm
 
 integer :: a,b,i,j,is,it,cnt,p_i,p_j,p_k,ib,nmap,ng,nb,nd,basispc
 integer :: np,nmcs,mcs,nmds,seed_dimension,nosc,step1,bath,init,nfile
